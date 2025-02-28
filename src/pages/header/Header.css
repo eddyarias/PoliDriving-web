@@ -1,0 +1,28 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Cambiado a flex-start para alinear a la izquierda */
+    width: 100%;
+    background-color: #e0f7fa;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+  
+  .header-logo {
+    height: 100px;
+    margin-right: 1%;
+    margin-left: 5%;
+  }
+  
+  .header-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 100%;
+  }
+  
+  .header-subtitle {
+    font-size: 1rem;
+    color: #555;
+    font-weight: bold;
+
+  }

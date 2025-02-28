@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/svg+xml" href="resources/Start_1.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="POLIDriving" />
+  <link rel="manifest" href="manifest.json" />
+  <title>POLIDriving</title>
+  <style>
+    body {
+      background-image: url('resources/Solido_Blanco.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin: 0;
+      height: 100vh;
+    }
+
+    .splash-logo {
+      position: absolute;
+      left: 40%;
+      top: 30%;
+      width: 20rem;
+      height: auto;
+      animation: blinker 2s linear infinite;
+    }
+
+    @keyframes blinker {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    @-webkit-keyframes blinker {
+      50% {
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <img class="splash-logo" src="resources/Start_2.png" alt="logo">
+  <script>
+    function loadApp() {
+      document.querySelector(".splash-logo").style.display = "none";
+    }
+    setTimeout(loadApp, 4500);
+  </script>
+  <noscript>Necesita habilitar JavaScript para correr esta web.</noscript>
+  <div id="root"></div>
+</body>
+
+</html>

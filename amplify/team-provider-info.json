@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-polidriving-dev-d664f-authRole",
+      "UnauthRoleArn": "arn:aws:iam::975050286309:role/amplify-polidriving-dev-d664f-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::975050286309:role/amplify-polidriving-dev-d664f-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-polidriving-dev-d664f-deployment",
+      "UnauthRoleName": "amplify-polidriving-dev-d664f-unauthRole",
+      "StackName": "amplify-polidriving-dev-d664f",
+      "StackId": "arn:aws:cloudformation:us-east-1:975050286309:stack/amplify-polidriving-dev-d664f/f074c670-8682-11ef-9323-0affca1951d7",
+      "AmplifyAppId": "dwnyp2onlo6q8"
+    },
+    "categories": {
+      "auth": {
+        "polidriving73cdf1fb": {}
+      }
+    }
+  }
+}

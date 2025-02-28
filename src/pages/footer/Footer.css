@@ -1,0 +1,40 @@
+.footer {
+    text-align: center;
+    background-color: #e0f7fa;
+    color: #333;
+    border-top: 1px solid #ddd;
+    width: 100%;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.footer-image {
+    width: 200px;
+    display: block; /* Asegura que la imagen se comporte como un bloque */
+    margin-left: 5%; /* Ajusta el margen izquierdo */
+}
+
+.footer-text {
+    margin: 2px 0;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #555;
+    text-align: left; /* Alinea el texto a la izquierda */
+    margin-left: 5%; /* Ajusta el margen izquierdo */
+}
+
+.footer-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.675rem;
+}
+
+.footer-link:hover {
+    text-decoration: underline;
+}
+
+.footer-copy {
+    margin-top: 0px;
+    font-size: 0.675rem;
+    color: #666;
+}

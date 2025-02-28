@@ -1,0 +1,27 @@
+.App {
+  background-image: url('/public/resources/Solido_Blanco.jpg');
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content {
+  margin: 20px;
+  font-size: 1.5rem;
+}
+
+.active {
+  font-weight: bold;
+  color: blue;
+}
+
+.splash-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}

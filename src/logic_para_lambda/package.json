@@ -1,0 +1,15 @@
+{
+  "name": "logic_para_lambda",
+  "version": "1.0.0",
+  "main": "get_atributes.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "haversine": "^1.1.1"
+  }
+}
