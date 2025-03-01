@@ -157,7 +157,6 @@ const Main = () => {
                 },
             });
     
-            // Listener para el evento de click
             mapRef.current.addListener('click', (e) => {
                 const lat = e.latLng.lat();
                 const lng = e.latLng.lng();
@@ -168,26 +167,18 @@ const Main = () => {
                     markerRef.current.setMap(null); // Eliminar el marcador anterior
                 }
     
-                // Añadir nuevo marcador
                 markMap(lat, lng);
                 fetchWeatherData(lat, lng);
                 get_speed_site_hour(lat, lng, hora);
             });
         };
     
-        // Si Google Maps no está disponible, lo cargamos
         if (!window.google || !window.google.maps) {
             loadGoogleMapsScript();
         } else {
-            // Si ya está cargado, solo llamamos a initMap
             window.initMap();
         }
-    
-        // Cleanup: no eliminamos initMap para que esté disponible siempre que sea necesario
-        return () => {
-            // No eliminamos `initMap`, ya que queremos que sea accesible cuando sea necesario
-            // Si decides eliminarla, descomenta la siguiente línea:
-            // delete window.initMap;
+            return () => {
         };
     }, [API_KEY_MAPS, fetchWeatherData, get_speed_site_hour]); // Eliminamos `hora` de las dependencias
     
