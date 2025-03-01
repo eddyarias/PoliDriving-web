@@ -21,10 +21,6 @@ const Main = () => {
     const [isCMotorManual, setIsCMotorManual] = useState(true);
     const [captchaValido, setCaptchaValido] = useState(false);
     const [isRpmManual, setIsRpmManual] = useState(true);
-    const [isOnHourManual, setIsOnHourManual] = useState(true);
-    const [isOnsiteManual, setIsOnsiteManual] = useState(true);
-    const [isDesingManual, setIsDesingManual] = useState(true);   
-
     const [comboboxPrecipitacion, setComboboxPrecipitacion] = useState('');
     const [comboboxPAceleracion, setComboboxPAceleracion] = useState('');
     const [comboboxAceleracion, setComboboxAceleracion] = useState('');
@@ -98,18 +94,6 @@ const Main = () => {
                 setPrecipitacion(0);
             });
     }, [API_KEY]);
-    
-    const disableFields = useCallback(() => {
-        if (!isOnHourManual) {
-            document.getElementById('onHourInput').disabled = true;
-        }
-        if (!isOnsiteManual) {
-            document.getElementById('onsiteInput').disabled = true;
-        }
-        if (!isDesingManual) {
-            document.getElementById('desingInput').disabled = true;
-        }
-    }, [isOnHourManual, isOnsiteManual, isDesingManual]);
 
     const get_speed_site_hour = useCallback((latitud, longitud, hour) => {
         const data = {
@@ -117,7 +101,7 @@ const Main = () => {
             longitude: longitud,
             time: hour
         };
-    
+
         axios.post(URL_GET_SPEED_SITE_HOUR, data, {
             headers: {
                 'Content-Type': 'application/json'
@@ -125,104 +109,99 @@ const Main = () => {
         })
         .then(response => {
             const parsedBody = JSON.parse(response.data.body);
-    
             setOnHour(parsedBody.num_accidents_time);
             setOnsite(parsedBody.num_accidents_onsitu);
             setDesing(parsedBody.design_speed);
-    
-            setIsOnHourManual(false);
-            setIsOnsiteManual(false);
-            setIsDesingManual(false);
-            disableFields()
         })
         .catch(() => {
             setOnHour(0);
             setOnsite(0);
             setDesing(0);
         });
-    }, [URL_GET_SPEED_SITE_HOUR, disableFields]);   
-
+    }, [URL_GET_SPEED_SITE_HOUR]);
+    
     useEffect(() => {
         const loadGoogleMapsScript = () => {
-          if (document.getElementById('googleMapsScript')) return; // Evita cargar el script si ya está presente
+            if (document.getElementById('googleMapsScript')) return; // Evita cargar el script si ya está presente
     
-          const script = document.createElement('script');
-          script.id = 'googleMapsScript'; // Asignamos un id para identificarlo
-          script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY_MAPS}&callback=initMap`;
-          script.async = true;
-          script.defer = true;
-          document.head.appendChild(script);
+            const script = document.createElement('script');
+            script.id = 'googleMapsScript'; // Asignamos un id para identificarlo
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY_MAPS}&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
         };
     
         // Definimos la función initMap de manera global
         window.initMap = () => {
-          if (!window.google || !window.google.maps) {
-            console.error("Google Maps API no se ha cargado correctamente.");
-            return;
-          }
-    
-          const bounds = {
-            north: -0.003,
-            south: -0.510,
-            east: -78.200,
-            west: -78.620,
-          };
-    
-          // Inicialización del mapa
-          mapRef.current = new window.google.maps.Map(document.getElementById('map'), {
-            center: { lat: -0.210297, lng: -78.490189 },
-            zoom: 15,
-            mapTypeControl: false, // Quitar opciones de relieve y satélite
-            restriction: {
-              latLngBounds: bounds,
-              strictBounds: true,
-            },
-          });
-    
-          // Listener para el evento de click
-          mapRef.current.addListener('click', (e) => {
-            const lat = e.latLng.lat();
-            const lng = e.latLng.lng();
-            setLatitud(lat.toFixed(6));
-            setLongitud(lng.toFixed(6));
-    
-            if (markerRef.current) {
-              markerRef.current.setMap(null); // Eliminar el marcador anterior
+            if (!window.google || !window.google.maps) {
+                console.error("Google Maps API no se ha cargado correctamente.");
+                return;
             }
     
-            // Añadir nuevo marcador
-            markMap(lat, lng);
-            fetchWeatherData(lat, lng);
-            get_speed_site_hour(lat, lng, hora);
-          });
+            const bounds = {
+                north: -0.003,
+                south: -0.510,
+                east: -78.200,
+                west: -78.620,
+            };
+    
+            // Inicialización del mapa
+            mapRef.current = new window.google.maps.Map(document.getElementById('map'), {
+                center: { lat: -0.210297, lng: -78.490189 },
+                zoom: 15,
+                mapTypeControl: false, // Quitar opciones de relieve y satélite
+                restriction: {
+                    latLngBounds: bounds,
+                    strictBounds: true,
+                },
+            });
+    
+            // Listener para el evento de click
+            mapRef.current.addListener('click', (e) => {
+                const lat = e.latLng.lat();
+                const lng = e.latLng.lng();
+                setLatitud(lat.toFixed(6));
+                setLongitud(lng.toFixed(6));
+    
+                if (markerRef.current) {
+                    markerRef.current.setMap(null); // Eliminar el marcador anterior
+                }
+    
+                // Añadir nuevo marcador
+                markMap(lat, lng);
+                fetchWeatherData(lat, lng);
+                get_speed_site_hour(lat, lng, hora);
+            });
         };
     
         // Si Google Maps no está disponible, lo cargamos
         if (!window.google || !window.google.maps) {
-          loadGoogleMapsScript();
+            loadGoogleMapsScript();
         } else {
-          // Si ya está cargado, solo llamamos a initMap
-          window.initMap();
+            // Si ya está cargado, solo llamamos a initMap
+            window.initMap();
         }
     
         // Cleanup: no eliminamos initMap para que esté disponible siempre que sea necesario
         return () => {
-          // No eliminamos `initMap`, ya que queremos que sea accesible cuando sea necesario
-          // Si decides eliminarla, descomenta la siguiente línea:
-          // delete window.initMap;
+            // No eliminamos `initMap`, ya que queremos que sea accesible cuando sea necesario
+            // Si decides eliminarla, descomenta la siguiente línea:
+            // delete window.initMap;
         };
-      }, [API_KEY_MAPS, fetchWeatherData, get_speed_site_hour, hora]); // Dependencias ajustadas
+    }, [API_KEY_MAPS, fetchWeatherData, get_speed_site_hour]); // Eliminamos `hora` de las dependencias
     
-      // Función para marcar el mapa en las coordenadas especificadas
-      const markMap = (latitud, longitud) => {
+    // Función para marcar el mapa en las coordenadas especificadas
+    const markMap = (latitud, longitud) => {
         const lat = parseFloat(latitud);
         const lng = parseFloat(longitud);
     
         markerRef.current = new window.google.maps.Marker({
-          position: { lat, lng },
-          map: mapRef.current,
+            position: { lat, lng },
+            map: mapRef.current,
         });
-      };
+    };
+    
     
       // Función para recalcular la posición del mapa y centrarlo en las nuevas coordenadas
       const calculateInMap = (latitud, longitud) => {
@@ -387,11 +366,8 @@ const Main = () => {
 
         if (!paceleracion) camposFaltantes.push("Posición acelerador");
         if (!tmotor) camposFaltantes.push("Temperatura motor");
-        if (!onsite) camposFaltantes.push("Accidentes sitio");
-        if (!desing) camposFaltantes.push("Velocidad diseño");
         if (!cardiaco) camposFaltantes.push("Ritmo cardiaco");
         if (!aceleracion) camposFaltantes.push("Aceleración");
-        if (!onhour) camposFaltantes.push("Accidentes hora");
         if (!velocidad) camposFaltantes.push("Velocidad");
         if (!cmotor) camposFaltantes.push("Carga motor");
         if (!longitud) camposFaltantes.push("Longitud");
@@ -400,7 +376,7 @@ const Main = () => {
         if (!rpm) camposFaltantes.push("Rpm");
 
         if (camposFaltantes.length > 0) {
-            alert(`Por favor, llena los siguientes campos: ${camposFaltantes.join(", ")}`);
+            //alert(`Por favor, llena los siguientes campos: ${camposFaltantes.join(", ")}`);
             return false;
         }
         return true;
@@ -417,8 +393,10 @@ const Main = () => {
         setIsTMotorManual(true);
         setIsCMotorManual(true);
         setIsRpmManual(true);
+        
         setComboboxPrecipitacion('');
         setComboboxPAceleracion('');
+        setComboboxAceleracion('');
         setComboboxVisibilidad('');
         setComboboxVelocidad('');
         setComboboxCardiaco('');
@@ -428,6 +406,7 @@ const Main = () => {
         setComboboxRpm('');
         setPrecipitacion('');
         setPAceleracion('');
+        setAceleracion('');
         setVisibilidad('');
         setVelocidad('');
         setCardiaco('');
@@ -449,7 +428,7 @@ const Main = () => {
             recaptchaRef.current.reset();
             setCaptchaValido(false);
         } else {
-            alert("Por favor, completa el reCAPTCHA.");
+            //alert("Por favor, completa el reCAPTCHA.");
             setMostrarEtiqueta(true);
             return;
         }
@@ -489,7 +468,7 @@ const Main = () => {
                     const numero = parsedData.Output;
     
                     console.log(respuestaAgente);
-                    alert(respuestaAgente);
+                    //alert(respuestaAgente);
     
                     const riskLevels = ['Bajo', 'Medio', 'Alto', 'Muy Alto'];
                     setResultado(riskLevels[numero - 1] || 'Desconocido');
@@ -588,7 +567,14 @@ const Main = () => {
                                 <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[15]}:</label>
                                 <select
                                     value={hora}
-                                    onChange={(e) => setHora(e.target.value)}
+                                    onChange={(e) => {
+                                        const newHora = e.target.value;
+                                        setHora(newHora);
+                                        // Actualizar datos sin resetear el mapa
+                                        if (latitud && longitud) {
+                                            get_speed_site_hour(latitud, longitud, newHora);
+                                        }
+                                    }}
                                     style={{ width: '200px', height: '22px', fontSize: '15px' }}
                                 >
                                     {[...Array(24)].map((_, i) => (
@@ -614,9 +600,10 @@ const Main = () => {
                                         id="onsiteInput"
                                         type="text"
                                         placeholder=""
-                                        value={onsite}
+                                        value={onsite || 0}
                                         onChange={(e) => validateNumberOnSite(e, setOnsite)}
                                         style={{ marginRight: '10px', width: '200px', height: '22px', fontSize: '15px' }}
+                                        disabled
                                     />
                                 </div>
                                 <span style={{ color: 'red', fontSize: '12px',   whiteSpace: 'pre' }}>{onsiteError}</span>
@@ -630,9 +617,10 @@ const Main = () => {
                                         id = "desingInput"
                                         type="text"
                                         placeholder=""
-                                        value={desing}
+                                        value={desing || 0}
                                         onChange={(e) => validateNumberDesing(e, setDesing)}
                                         style={{ marginRight: '10px', width: '200px', height: '22px', fontSize: '15px' }}
+                                        disabled
                                     />
                                     <label style={{ width: '75px', fontSize: '15px', color: 'blue' }}>{comboLabelsFinal[0]}</label>
                                 </div>
@@ -647,15 +635,16 @@ const Main = () => {
                                         id = "onHourInput"
                                         type="text"
                                         placeholder=""
-                                        value={onhour}
+                                        value={onhour || 0}
                                         onChange={(e) => validateNumberOnHour(e, setOnHour)}
                                         style={{ marginRight: '10px', width: '200px', height: '22px', fontSize: '15px' }}
+                                        disabled
                                     />
                                 </div>
                                 <span style={{ color: 'red', fontSize: '12px',   whiteSpace: 'pre' }}>{onhourError}</span>
                             </div>
 
-                            {/* Añadir separador */}
+                                                        {/* Añadir separador */}
                             <div align='left' style={{ marginBottom: '5px', marginTop: '5px' }}>
                                 <div style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>
@@ -706,7 +695,7 @@ const Main = () => {
                                         <option value={0}>Bajo:     [0-1500]</option>
                                         <option value={1}>Normal:   [1501-3000]</option>
                                         <option value={2}>Alto:     [3001-5000]</option>
-                                        <option value={3}>Muy Alto: [5001-8000]</option>
+                                        <option value={3}>My Alto: [5001-8000]</option>
                                     </select>
                                     <input
                                         type="text"
@@ -734,7 +723,7 @@ const Main = () => {
                                         <option value={0}>Bajo:     [0-15]</option>
                                         <option value={1}>Normal:   [16-20]</option>
                                         <option value={2}>Alto:     [21-25]</option>
-                                        <option value={3}>Muy ALto: [26-30]</option>
+                                        <option value={3}>My Alto: [26-30]</option>
                                     </select>
                                     <input
                                         type="text"
@@ -763,7 +752,7 @@ const Main = () => {
                                         <option value={0}>Bajo:     [0-15]</option>
                                         <option value={1}>Normal:   [16-20]</option>
                                         <option value={2}>Alto:     [21-25]</option>
-                                        <option value={3}>Muy ALto: [26-30]</option>
+                                        <option value={3}>My Alto: [26-30]</option>
                                     </select>
                                     <input
                                         type="text"
@@ -819,7 +808,7 @@ const Main = () => {
                                         <option value={0}>Bajo:     [0-10]</option>
                                         <option value={1}>Normal:   [1-13]</option>
                                         <option value={2}>Alto:     [13-15]</option>
-                                        <option value={3}>Muy ALto: [15-20]</option>
+                                        <option value={3}>My Alto: [15-20]</option>
                                     </select>
                                     <input
                                         type="text"
