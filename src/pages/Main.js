@@ -11,29 +11,34 @@ const Main = () => {
     const mapRef = useRef(null);
     const markerRef = useRef(null);
     const [isPrecipitacionManual, setIsPrecipitacionManual] = useState(true);
-    const [comboboxPrecipitacion, setComboboxPrecipitacion] = useState('');
     const [isPAceleracionManual, setIsPAceleracionManual] = useState(true);
     const [isVisibilidadManual, setIsVisibilidadManual] = useState(true);
     const [isAceleracionManual, setIsAceleracionManual] = useState(true);
-    const [comboboxPAceleracion, setComboboxPAceleracion] = useState('');
-    const [comboboxAceleracion, setComboboxAceleracion] = useState('');
-    const [comboboxVisibilidad, setComboboxVisibilidad] = useState('');
     const [isVelocidadManual, setIsVelocidadManual] = useState(true);
     const [isCardiacoManual, setIsCardiacoManual] = useState(true);
-    const [comboboxVelocidad, setComboboxVelocidad] = useState('');
-    const [comboboxCardiaco, setComboboxCardiaco] = useState('');
-    const [mostrarEtiqueta, setMostrarEtiqueta] = useState(true);
-    const [resultado, setResultado] = useState('Calculando...');
     const [isClimaManual, setIsClimaManual] = useState(true);
     const [isTMotorManual, setIsTMotorManual] = useState(true);
     const [isCMotorManual, setIsCMotorManual] = useState(true);
     const [captchaValido, setCaptchaValido] = useState(false);
+    const [isRpmManual, setIsRpmManual] = useState(true);
+    const [isOnHourManual, setIsOnHourManual] = useState(true);
+    const [isOnsiteManual, setIsOnsiteManual] = useState(true);
+    const [isDesingManual, setIsDesingManual] = useState(true);   
+
+    const [comboboxPrecipitacion, setComboboxPrecipitacion] = useState('');
+    const [comboboxPAceleracion, setComboboxPAceleracion] = useState('');
+    const [comboboxAceleracion, setComboboxAceleracion] = useState('');
+    const [comboboxVisibilidad, setComboboxVisibilidad] = useState('');
+    const [comboboxVelocidad, setComboboxVelocidad] = useState('');
+    const [comboboxCardiaco, setComboboxCardiaco] = useState('');
+    const [mostrarEtiqueta, setMostrarEtiqueta] = useState(true);
+    const [resultado, setResultado] = useState('Calculando...');
+
     const [comboboxTMotor, setComboboxTMotor] = useState('');
     const [comboboxCMotor, setComboboxCMotor] = useState('');
     const [comboboxClima, setComboboxClima] = useState('');
     const [precipitacion, setPrecipitacion] = useState('');
     const [paceleracion, setPAceleracion] = useState('');
-    const [isRpmManual, setIsRpmManual] = useState(true);
     const [aceleracion, setAceleracion] = useState('');
     const [visibilidad, setVisibilidad] = useState('');
     const [comboboxRpm, setComboboxRpm] = useState('');
@@ -93,112 +98,145 @@ const Main = () => {
                 setPrecipitacion(0);
             });
     }, [API_KEY]);
+    
+    const disableFields = useCallback(() => {
+        if (!isOnHourManual) {
+            document.getElementById('onHourInput').disabled = true;
+        }
+        if (!isOnsiteManual) {
+            document.getElementById('onsiteInput').disabled = true;
+        }
+        if (!isDesingManual) {
+            document.getElementById('desingInput').disabled = true;
+        }
+    }, [isOnHourManual, isOnsiteManual, isDesingManual]);
 
-    const get_speed_site_hour = useCallback(async (latitud, longitud, hour) => {
-        
+    const get_speed_site_hour = useCallback((latitud, longitud, hour) => {
         const data = {
             latitude: latitud,
             longitude: longitud,
             time: hour
         };
-
-        try {
-            const response = await fetch(URL_GET_SPEED_SITE_HOUR, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+    
+        axios.post(URL_GET_SPEED_SITE_HOUR, data, {
+            headers: {
+                'Content-Type': 'application/json'
             }
-
-            const jsonResponse = await response.json();
-            const parsedBody = JSON.parse(jsonResponse.body);
-
+        })
+        .then(response => {
+            const parsedBody = JSON.parse(response.data.body);
+    
             setOnHour(parsedBody.num_accidents_time);
             setOnsite(parsedBody.num_accidents_onsitu);
             setDesing(parsedBody.design_speed);
-
-            setIsVelocidadManual(false);
-            setIsCardiacoManual(false);
-            setIsClimaManual(false);
-            setIsTMotorManual(false);
-            setIsCMotorManual(false);
-            setIsRpmManual(false);
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }, [URL_GET_SPEED_SITE_HOUR]);
+    
+            setIsOnHourManual(false);
+            setIsOnsiteManual(false);
+            setIsDesingManual(false);
+            disableFields()
+        })
+        .catch(() => {
+            setOnHour(0);
+            setOnsite(0);
+            setDesing(0);
+        });
+    }, [URL_GET_SPEED_SITE_HOUR, disableFields]);   
 
     useEffect(() => {
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY_MAPS}&callback=initMap`;
-        script.async = true;
-        script.defer = true;
+        const loadGoogleMapsScript = () => {
+          if (document.getElementById('googleMapsScript')) return; // Evita cargar el script si ya está presente
+    
+          const script = document.createElement('script');
+          script.id = 'googleMapsScript'; // Asignamos un id para identificarlo
+          script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY_MAPS}&callback=initMap`;
+          script.async = true;
+          script.defer = true;
+          document.head.appendChild(script);
+        };
+    
+        // Definimos la función initMap de manera global
         window.initMap = () => {
-
-            const bounds = {
-                north: -0.003,
-                south: -0.510,
-                east: -78.200,
-                west: -78.620,
-            };
+          if (!window.google || !window.google.maps) {
+            console.error("Google Maps API no se ha cargado correctamente.");
+            return;
+          }
     
-            mapRef.current = new window.google.maps.Map(document.getElementById('map'), {
-                center: { lat: -0.210297, lng: -78.490189 },
-                zoom: 15,
-                mapTypeControl: false, // Quitar opciones de relieve y satélite
-                restriction: {
-                    latLngBounds: bounds,
-                    strictBounds: true,
-                },
-            });
+          const bounds = {
+            north: -0.003,
+            south: -0.510,
+            east: -78.200,
+            west: -78.620,
+          };
     
-            mapRef.current.addListener('click', (e) => {
-                const lat = e.latLng.lat();
-                const lng = e.latLng.lng();
-                setLatitud(lat.toFixed(6));
-                setLongitud(lng.toFixed(6));
+          // Inicialización del mapa
+          mapRef.current = new window.google.maps.Map(document.getElementById('map'), {
+            center: { lat: -0.210297, lng: -78.490189 },
+            zoom: 15,
+            mapTypeControl: false, // Quitar opciones de relieve y satélite
+            restriction: {
+              latLngBounds: bounds,
+              strictBounds: true,
+            },
+          });
     
-                if (markerRef.current) {
-                    markerRef.current.setMap(null);
-                }
-                markMap(lat, lng);
-                fetchWeatherData(lat, lng);
-                get_speed_site_hour(latitud, longitud, hora);
-            });
+          // Listener para el evento de click
+          mapRef.current.addListener('click', (e) => {
+            const lat = e.latLng.lat();
+            const lng = e.latLng.lng();
+            setLatitud(lat.toFixed(6));
+            setLongitud(lng.toFixed(6));
+    
+            if (markerRef.current) {
+              markerRef.current.setMap(null); // Eliminar el marcador anterior
+            }
+    
+            // Añadir nuevo marcador
+            markMap(lat, lng);
+            fetchWeatherData(lat, lng);
+            get_speed_site_hour(lat, lng, hora);
+          });
         };
-        document.head.appendChild(script);
     
-        return () => {
-            delete window.initMap;
-        };
-    }, [API_KEY_MAPS, fetchWeatherData, get_speed_site_hour, hora, latitud, longitud]);
-
-    const calculateInMap = (latitud, longitud) => {
-        const lat = parseFloat(latitud);
-        const lng = parseFloat(longitud);
-
-        if (markerRef.current) {
-            markerRef.current.setMap(null);
+        // Si Google Maps no está disponible, lo cargamos
+        if (!window.google || !window.google.maps) {
+          loadGoogleMapsScript();
+        } else {
+          // Si ya está cargado, solo llamamos a initMap
+          window.initMap();
         }
-
-        markMap(latitud, longitud);
-        mapRef.current.setCenter({ lat, lng });
-    };
-
-    const markMap = (latitud, longitud) => {
+    
+        // Cleanup: no eliminamos initMap para que esté disponible siempre que sea necesario
+        return () => {
+          // No eliminamos `initMap`, ya que queremos que sea accesible cuando sea necesario
+          // Si decides eliminarla, descomenta la siguiente línea:
+          // delete window.initMap;
+        };
+      }, [API_KEY_MAPS, fetchWeatherData, get_speed_site_hour, hora]); // Dependencias ajustadas
+    
+      // Función para marcar el mapa en las coordenadas especificadas
+      const markMap = (latitud, longitud) => {
         const lat = parseFloat(latitud);
         const lng = parseFloat(longitud);
+    
         markerRef.current = new window.google.maps.Marker({
-            position: { lat, lng },
-            map: mapRef.current,
+          position: { lat, lng },
+          map: mapRef.current,
         });
-    };
-
+      };
+    
+      // Función para recalcular la posición del mapa y centrarlo en las nuevas coordenadas
+      const calculateInMap = (latitud, longitud) => {
+        const lat = parseFloat(latitud);
+        const lng = parseFloat(longitud);
+    
+        if (markerRef.current) {
+          markerRef.current.setMap(null); // Eliminar marcador anterior
+        }
+    
+        markMap(lat, lng);
+        mapRef.current.setCenter({ lat, lng });
+      };
+    
     const handleComboboxChange = (e, setCombobox, setValue, setIsManual, setError, ranges) => {
         const selectedValue = e.target.value;
         setCombobox(selectedValue);
@@ -573,6 +611,7 @@ const Main = () => {
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[16]}:</label>
                                     <input
+                                        id="onsiteInput"
                                         type="text"
                                         placeholder=""
                                         value={onsite}
@@ -588,6 +627,7 @@ const Main = () => {
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[17]}:</label>
                                     <input
+                                        id = "desingInput"
                                         type="text"
                                         placeholder=""
                                         value={desing}
@@ -604,6 +644,7 @@ const Main = () => {
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[18]}:</label>
                                     <input
+                                        id = "onHourInput"
                                         type="text"
                                         placeholder=""
                                         value={onhour}
