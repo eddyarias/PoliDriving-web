@@ -1,9 +1,6 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-//import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
-//import Home from './pages/Home';
-//import About from './pages/About';
 import Main from './pages/Main';
 import Footer from './pages/footer/Footer';
 import Header from './pages/header/Header';
