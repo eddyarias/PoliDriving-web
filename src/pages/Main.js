@@ -502,13 +502,13 @@ const Main = () => {
             boxSizing: 'border-box',
             paddingLeft: '4%'
              }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', transform: 'scale(0.80)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', transform: 'scale(0.80)' , willChange: 'transform' , backfaceVisibility: 'hidden'}}>
                 {
                     <div style={{ display: 'flex', flex: 1, justifyContent: 'space-between' }}>
                         <div style={{ flex: 1, marginRight: '-30px', marginLeft: '-150px' }}>
 
                             {/* Latitud */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', flexDirection: 'column' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)'}}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[13]}:</label>
                                     <input
@@ -525,13 +525,13 @@ const Main = () => {
                                         }}
                                         style={{ marginRight: '10px', width: '200px', height: '22px', fontSize: '15px' }}
                                     />
-                                    <label style={{ marginRight: '10px', width: '330px', fontSize: '15px', color: 'blue' }}>° decimales (p. ej. -0.29795)</label>
+                                    <label style={{ marginRight: '20px', width: '330px', fontSize: '15px', color: 'blue' }}>° decimales (p. ej. -0.29795)</label>
                                 </div>
                                 <span style={{ color: 'red', fontSize: '12px',   whiteSpace: 'pre' }}>{latitudError}</span>
                             </div>
 
                             {/* Longitud */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', flexDirection: 'column' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[14]}:</label>
                                     <input
@@ -554,7 +554,7 @@ const Main = () => {
                             </div>
 
                             {/* Hora */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', alignItems: 'center' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', alignItems: 'center', transform: 'scale(1.05)' }}>
                                 <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[15]}:</label>
                                 <select
                                     value={hora}
@@ -575,8 +575,8 @@ const Main = () => {
                             </div>
 
                             {/* Añadir separador */}
-                            <div style={{ marginBottom: '5px', marginTop: '5px' }}>
-                                <div style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', alignItems: 'center' }}>
+                            <div style={{ marginBottom: '10px', marginTop: '5px' }}>
+                                <div style={{ marginBottom: '10px', marginTop: '10px', display: 'flex', alignItems: 'center', transform: 'scale(1.05)' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>
                                         {'–'.repeat(95)}
                                     </label>
@@ -584,7 +584,7 @@ const Main = () => {
                             </div>
 
                             {/* OnSite */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', flexDirection: 'column' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[16]}:</label>
                                     <input
@@ -601,7 +601,7 @@ const Main = () => {
                             </div>
 
                             {/* Vel. Diseño */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', flexDirection: 'column' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[17]}:</label>
                                     <input
@@ -619,7 +619,7 @@ const Main = () => {
                             </div>
 
                             {/* OnHour */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', flexDirection: 'column' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[18]}:</label>
                                     <input
@@ -636,8 +636,8 @@ const Main = () => {
                             </div>
 
                                                         {/* Añadir separador */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px' }}>
-                                <div style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', alignItems: 'center' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px' }}>
+                                <div style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', alignItems: 'center', transform: 'scale(1.05)' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>
                                         {'–'.repeat(95)}
                                     </label>
@@ -645,7 +645,7 @@ const Main = () => {
                             </div>
 
                             {/* Velocidad */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', flexDirection: 'column' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[0]}:</label>
                                     <select
@@ -674,7 +674,7 @@ const Main = () => {
                             </div>
 
                             {/* RPM */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', flexDirection: 'column' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[1]}:</label>
                                     <select
@@ -702,7 +702,7 @@ const Main = () => {
                             </div>
 
                             {/* Aceleración */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', flexDirection: 'column' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[2]}:</label>
                                     <select
@@ -731,7 +731,7 @@ const Main = () => {
 
 
                             {/* Posición del Acelerador */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', flexDirection: 'column' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[3]}:</label>
                                     <select
@@ -759,7 +759,7 @@ const Main = () => {
                             </div>
 
                             {/* Temperatura del Motor */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', flexDirection: 'column' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[4]}:</label>
                                     <select
@@ -787,7 +787,7 @@ const Main = () => {
                             </div>
 
                             {/* Carga del Motor */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', flexDirection: 'column' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column' , transform: 'scale(1.05)'}}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[5]}:</label>
                                     <select
@@ -815,8 +815,8 @@ const Main = () => {
                             </div>
 
                             {/* Añadir separador */}
-                            <div style={{ marginBottom: '5px', marginTop: '5px' }}>
-                                <div style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', alignItems: 'center' }}>
+                            <div style={{ marginBottom: '10px', marginTop: '5px' }}>
+                                <div style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', alignItems: 'center' , transform: 'scale(1.05)'}}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>
                                         {'–'.repeat(95)}
                                     </label>
@@ -824,7 +824,7 @@ const Main = () => {
                             </div>
 
                             {/* Ritmo Cardiaco */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', flexDirection: 'column' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column' , transform: 'scale(1.05)'}}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[9]}:</label>
                                     <select
@@ -854,8 +854,8 @@ const Main = () => {
                             
 
                             {/* Añadir separador */}
-                            <div style={{ marginBottom: '5px', marginTop: '5px' }}>
-                                <div style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', alignItems: 'center' }}>
+                            <div style={{ marginBottom: '10px', marginTop: '5px' }}>
+                                <div style={{ marginBottom: '10px', marginTop: '10px', display: 'flex', alignItems: 'center', transform: 'scale(1.05)' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>
                                         {'–'.repeat(95)}
                                     </label>
@@ -863,7 +863,7 @@ const Main = () => {
                             </div>
 
                             {/* Clima */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', flexDirection: 'column' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[10]}:</label>
                                     <select
@@ -896,7 +896,7 @@ const Main = () => {
                             </div>
 
                             {/* Visibilidad */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', flexDirection: 'column' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[11]}:</label>
                                     <select
@@ -925,7 +925,7 @@ const Main = () => {
                             </div>
 
                             {/* Precipitación */}
-                            <div align='left' style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', flexDirection: 'column' }}>
+                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[12]}:</label>
                                     <select
@@ -954,8 +954,8 @@ const Main = () => {
                             </div>
 
                             {/* Añadir separador */}
-                            <div style={{ marginBottom: '5px', marginTop: '5px' }}>
-                                <div style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', alignItems: 'center' }}>
+                            <div style={{ marginBottom: '10px', marginTop: '5px' }}>
+                                <div style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', alignItems: 'center', transform: 'scale(1.05)' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>
                                         {'–'.repeat(200)}
                                     </label>
@@ -981,7 +981,7 @@ const Main = () => {
 
                             {/* Añadir separador */}
                             <div style={{ marginBottom: '60px', marginTop: '60px' }}>
-                                <div style={{ marginBottom: '-50px', marginTop: '5px', display: 'flex', alignItems: 'center' }}>
+                                <div style={{ marginBottom: '-50px', marginTop: '5px', display: 'flex', alignItems: 'center', transform: 'scale(1.05)' }}>
                                     <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>
                                         {'–'.repeat(200)}
                                     </label>
