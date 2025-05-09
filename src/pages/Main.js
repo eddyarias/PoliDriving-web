@@ -454,16 +454,15 @@ const Main = () => {
     
             axios(config)
                 .then(response => {
-                    const respuestaAgente = JSON.stringify(response.data);
-                    const parsedData = JSON.parse(respuestaAgente);
-                    const numero = parsedData.Output;
-    
-                    console.log(respuestaAgente);
-                    //alert(respuestaAgente);
-    
+                    const parsedBody = JSON.parse(response.data.body);
+                    const numero = parsedBody.Output;
+                    
+                    console.log(parsedBody); // o console.log(numero);
+                    
                     const riskLevels = ['Bajo', 'Medio', 'Alto', 'Muy Alto'];
                     setResultado(riskLevels[numero - 1] || 'Desconocido');
                     setColor(obtenerColorFondo(numero));
+                    
                 })
                 .catch(error => {
                     console.log(error);
