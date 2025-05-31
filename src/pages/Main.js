@@ -1,13 +1,13 @@
 import ReCAPTCHA from "react-google-recaptcha";
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Main = () => {
     const API_KEY = process.env.REACT_APP_API_KEY;
     const API_KEY_MAPS = process.env.REACT_APP_API_KEY_MAPS;
     const URL_GET_SPEED_SITE_HOUR = process.env.REACT_APP_URL_GET_SPEED_SITE_HOUR;
     const URL_PREDICT = process.env.REACT_APP_URL_PREDICT;
-
     const mapRef = useRef(null);
     const markerRef = useRef(null);
     const [isPrecipitacionManual, setIsPrecipitacionManual] = useState(true);
@@ -29,7 +29,6 @@ const Main = () => {
     const [comboboxCardiaco, setComboboxCardiaco] = useState('');
     const [mostrarEtiqueta, setMostrarEtiqueta] = useState(true);
     const [resultado, setResultado] = useState('Calculando...');
-
     const [comboboxTMotor, setComboboxTMotor] = useState('');
     const [comboboxCMotor, setComboboxCMotor] = useState('');
     const [comboboxClima, setComboboxClima] = useState('');
@@ -215,7 +214,7 @@ const Main = () => {
             setValue("");
             setIsManual(true);
         } else {
-            setIsManual(false);
+            setIsManual(true);
             const [min, max] = ranges[selectedValue] || [0, 0];
             const randomValue = (min === max) ? "0" : (Math.random() * (max - min) + min).toFixed(1);
             setValue(randomValue);
@@ -485,8 +484,8 @@ const Main = () => {
         resetFields();
     };
 
+    // Etiquetas
     const comboLabelsFinal = ["km/h", "rev/min", "m/s²", "%", "°C", "%", "°", "km", "lpm", "mm"];
-
     const comboLabels = ["Velocidad ", "Revoluciones ", "Aceleración ",
         "Pos. Acelerador ", "Temp. Motor ", "Carga Motor ",
         "Áng. Dirección ", "Dist. Recorrida ", "Acc. en Sitio ",
@@ -495,162 +494,168 @@ const Main = () => {
         "Hora ", "Accidentes sitio ", "Velocidad diseño ", "Accidentes hora "];
 
     return (
-        <div style={{ margin: '20px 0 10px 0', 
-            position: 'relative', 
-            width: '100%', 
-            boxSizing: 'border-box',
-            paddingLeft: '4%'
-             }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', transform: 'scale(0.80)' , willChange: 'transform' , backfaceVisibility: 'hidden'}}>
-                {
-                    <div style={{ display: 'flex', flex: 1, justifyContent: 'space-between' }}>
-                        <div style={{ flex: 1, marginRight: '-30px', marginLeft: '-150px' }}>
-
+        <div className="container-fluid py-4" style={{ minHeight: "100vh" }}>
+            <div className="row h-100" style={{ minHeight: "80vh" }}>
+                {/* Formulario */}
+                <div className="col-lg-6 col-md-12 mb-4 d-flex flex-column" style={{ height: "100%" }}>
+                    <form className="flex-grow-1 d-flex flex-column">
+                        <div className="row g-3 flex-grow-1">
                             {/* Latitud */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)'}}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[13]}:</label>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-3 text-start">
+                                    <label className="form-label">{comboLabels[13]}:</label>
+                                </div>
+                                <div className="col-5 d-flex justify-content-center">
                                     <input
                                         type="text"
-                                        placeholder=""
+                                        className="form-control text-center"
                                         value={latitud}
                                         onChange={validateNumberLatitud}
                                         onBlur={() => {
                                             if (latitud && longitud) {
                                                 fetchWeatherData(latitud, longitud);
-                                                calculateInMap(latitud, longitud)
+                                                calculateInMap(latitud, longitud);
                                                 get_speed_site_hour(latitud, longitud, hora);
                                             }
                                         }}
-                                        style={{ marginRight: '10px', width: '200px', height: '22px', fontSize: '15px' }}
                                     />
-                                    <label style={{ marginRight: '20px', width: '330px', fontSize: '15px', color: 'blue' }}>° decimales (p. ej. -0.29795)</label>
                                 </div>
-                                <span style={{ color: 'red', fontSize: '12px',   whiteSpace: 'pre' }}>{latitudError}</span>
+                                <div className="col-1">
+                                    <div className="form-text text-primary">decimales</div>
+                                </div>
+                                <div className="col-3">
+                                    <div className="text-danger small">{latitudError}</div>
+                                </div>
                             </div>
-
                             {/* Longitud */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[14]}:</label>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-3 text-start">
+                                    <label className="form-label">{comboLabels[14]}:</label>
+                                </div>
+                                <div className="col-5 d-flex justify-content-center">
                                     <input
                                         type="text"
-                                        placeholder=""
+                                        className="form-control text-center"
                                         value={longitud}
-                                        onChange={(e) => validateNumberLongitud(e, setLongitud)}
+                                        onChange={validateNumberLongitud}
                                         onBlur={() => {
                                             if (latitud && longitud) {
                                                 fetchWeatherData(latitud, longitud);
-                                                calculateInMap(latitud, longitud)
+                                                calculateInMap(latitud, longitud);
                                                 get_speed_site_hour(latitud, longitud, hora);
                                             }
                                         }}
-                                        style={{ marginRight: '10px', width: '200px', height: '22px', fontSize: '15px' }}
                                     />
-                                    <label style={{ marginRight: '10px', width: '330px', fontSize: '15px', color: 'blue' }}>° decimales (p. ej. -78.46044)</label>
                                 </div>
-                                <span style={{ color: 'red', fontSize: '12px',   whiteSpace: 'pre' }}>{longitudError}</span>
+                                <div className="col-1">
+                                    <div className="form-text text-primary">decimales</div>
+                                </div>
+                                <div className="col-3">
+                                    <div className="text-danger small">{longitudError}</div>
+                                </div>
                             </div>
-
                             {/* Hora */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', alignItems: 'center', transform: 'scale(1.05)' }}>
-                                <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[15]}:</label>
-                                <select
-                                    value={hora}
-                                    onChange={(e) => {
-                                        const newHora = e.target.value;
-                                        setHora(newHora);
-                                        // Actualizar datos sin resetear el mapa
-                                        if (latitud && longitud) {
-                                            get_speed_site_hour(latitud, longitud, newHora);
-                                        }
-                                    }}
-                                    style={{ width: '200px', height: '22px', fontSize: '15px' }}
-                                >
-                                    {[...Array(24)].map((_, i) => (
-                                        <option key={i} value={i}>{`${i.toString().padStart(2, '0')}:00`}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            {/* Añadir separador */}
-                            <div style={{ marginBottom: '10px', marginTop: '5px' }}>
-                                <div style={{ marginBottom: '10px', marginTop: '10px', display: 'flex', alignItems: 'center', transform: 'scale(1.05)' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>
-                                        {'–'.repeat(95)}
-                                    </label>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-3 text-start">
+                                    <label className="form-label">{comboLabels[15]}:</label>
                                 </div>
+                                <div className="col-5 d-flex justify-content-center">
+                                    <select
+                                        className="form-select text-center"
+                                        value={hora}
+                                        onChange={(e) => {
+                                            const newHora = e.target.value;
+                                            setHora(newHora);
+                                            if (latitud && longitud) {
+                                                get_speed_site_hour(latitud, longitud, newHora);
+                                            }
+                                        }}
+                                    >
+                                        {[...Array(24)].map((_, i) => (
+                                            <option key={i} value={i}>{`${i.toString().padStart(2, '0')}:00`}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="col-2"></div>
+                                <div className="col-2"></div>
                             </div>
-
+                            {/* Separador */}
+                            <hr className="my-3" />
                             {/* OnSite */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[16]}:</label>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-3 text-start">
+                                    <label className="form-label">{comboLabels[16]}:</label>
+                                </div>
+                                <div className="col-5 d-flex justify-content-center">
                                     <input
                                         id="onsiteInput"
                                         type="text"
-                                        placeholder=""
+                                        className="form-control text-center"
                                         value={onsite || 0}
-                                        onChange={(e) => validateNumberOnSite(e, setOnsite)}
-                                        style={{ marginRight: '10px', width: '200px', height: '22px', fontSize: '15px' }}
+                                        onChange={validateNumberOnSite}
                                         disabled
                                     />
                                 </div>
-                                <span style={{ color: 'red', fontSize: '12px',   whiteSpace: 'pre' }}>{onsiteError}</span>
+                                <div className="col-2"></div>
+                                <div className="col-3">
+                                    <div className="text-danger small">{onsiteError}</div>
+                                </div>
                             </div>
-
                             {/* Vel. Diseño */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[17]}:</label>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-3 text-start">
+                                    <label className="form-label">{comboLabels[17]}:</label>
+                                </div>
+                                <div className="col-5 d-flex justify-content-center">
                                     <input
-                                        id = "desingInput"
+                                        id="desingInput"
                                         type="text"
-                                        placeholder=""
+                                        className="form-control text-center"
                                         value={desing || 0}
-                                        onChange={(e) => validateNumberDesing(e, setDesing)}
-                                        style={{ marginRight: '10px', width: '200px', height: '22px', fontSize: '15px' }}
+                                        onChange={validateNumberDesing}
                                         disabled
                                     />
-                                    <label style={{ width: '75px', fontSize: '15px', color: 'blue' }}>{comboLabelsFinal[0]}</label>
                                 </div>
-                                <span style={{ color: 'red', fontSize: '12px',   whiteSpace: 'pre' }}>{desingError}</span>
+                                <div className="col-1">
+                                    <div className="form-text">{comboLabelsFinal[0]}</div>
+                                </div>
+                                <div className="col-3">
+                                    <div className="text-danger small">{desingError}</div>
+                                </div>
                             </div>
-
                             {/* OnHour */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[18]}:</label>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-3 text-start">
+                                    <label className="form-label">{comboLabels[18]}:</label>
+                                </div>
+                                <div className="col-5 d-flex justify-content-center">
                                     <input
-                                        id = "onHourInput"
+                                        id="onHourInput"
                                         type="text"
-                                        placeholder=""
+                                        className="form-control text-center"
                                         value={onhour || 0}
-                                        onChange={(e) => validateNumberOnHour(e, setOnHour)}
-                                        style={{ marginRight: '10px', width: '200px', height: '22px', fontSize: '15px' }}
+                                        onChange={validateNumberOnHour}
                                         disabled
                                     />
                                 </div>
-                                <span style={{ color: 'red', fontSize: '12px',   whiteSpace: 'pre' }}>{onhourError}</span>
-                            </div>
-
-                                                        {/* Añadir separador */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px' }}>
-                                <div style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', alignItems: 'center', transform: 'scale(1.05)' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>
-                                        {'–'.repeat(95)}
-                                    </label>
+                                <div className="col-2"></div>
+                                <div className="col-3">
+                                    <div className="text-danger small">{onhourError}</div>
                                 </div>
                             </div>
-
+                            {/* Separador */}
+                            <hr className="my-3" />
                             {/* Velocidad */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[0]}:</label>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-3 text-start">
+                                    <label className="form-label">{comboLabels[0]}:</label>
+                                </div>
+                                <div className="col-5 d-flex justify-content-center">
                                     <select
-                                        style={{ width: '200px', height: '22px', fontSize: '15px' }}
+                                        className="form-select text-center"
                                         onChange={handleComboboxChangeVelocidad}
                                         value={comboboxVelocidad}
+                                        disabled={!isVelocidadManual}
                                     >
                                         <option value="">Manual</option>
                                         <option value={0}>Normal:    [0-0]</option>
@@ -661,25 +666,30 @@ const Main = () => {
                                     </select>
                                     <input
                                         type="text"
-                                        placeholder={``}
+                                        className="form-control text-center"
                                         value={velocidad}
                                         onChange={validateNumberVelocidad}
-                                        style={{ marginLeft: '25px', marginRight: '25px', width: '200px', height: '22px', fontSize: '15px' }}
                                         disabled={!isVelocidadManual}
                                     />
-                                    <label style={{ marginLeft: '-20px', marginRight: '-30px', width: '75px', fontSize: '15px', color: 'blue' }}>{comboLabelsFinal[0]}</label>
                                 </div>
-                                <span style={{ color: 'red', fontSize: '12px',   whiteSpace: 'pre' }}>{velocidadError}</span>
+                                <div className="col-1">
+                                    <span className="form-text">{comboLabelsFinal[0]}</span>
+                                </div>
+                                <div className="col-3">
+                                    <div className="text-danger small">{velocidadError}</div>
+                                </div>
                             </div>
-
                             {/* RPM */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[1]}:</label>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-3 text-start">
+                                    <label className="form-label">{comboLabels[1]}:</label>
+                                </div>
+                                <div className="col-5 d-flex justify-content-center">
                                     <select
-                                        style={{ width: '200px', height: '22px', fontSize: '15px' }}
+                                        className="form-select text-center"
                                         onChange={handleComboboxChangeRpm}
                                         value={comboboxRpm}
+                                        disabled={!isRpmManual}
                                     >
                                         <option value="">Manual</option>
                                         <option value={0}>Bajo:     [0-1500]</option>
@@ -689,25 +699,30 @@ const Main = () => {
                                     </select>
                                     <input
                                         type="text"
-                                        placeholder={``}
+                                        className="form-control text-center"
                                         value={rpm}
                                         onChange={validateNumberRpm}
-                                        style={{ marginLeft: '25px', marginRight: '25px', width: '200px', height: '22px', fontSize: '15px' }}
                                         disabled={!isRpmManual}
                                     />
-                                    <label style={{ marginLeft: '-20px', marginRight: '-30px', width: '75px', fontSize: '15px', color: 'blue' }}>{comboLabelsFinal[1]}</label>
                                 </div>
-                                <span style={{ color: 'red', fontSize: '12px',   whiteSpace: 'pre' }}>{rpmError}</span>
+                                <div className="col-1">
+                                    <span className="form-text">{comboLabelsFinal[1]}</span>
+                                </div>
+                                <div className="col-3">
+                                    <div className="text-danger small">{rpmError}</div>
+                                </div>
                             </div>
-
                             {/* Aceleración */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[2]}:</label>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-3 text-start">
+                                    <label className="form-label">{comboLabels[2]}:</label>
+                                </div>
+                                <div className="col-5 d-flex justify-content-center">
                                     <select
-                                        style={{ width: '200px', height: '22px', fontSize: '15px' }}
+                                        className="form-select text-center"
                                         onChange={handleComboboxChangeAceleracion}
                                         value={comboboxAceleracion}
+                                        disabled={!isAceleracionManual}
                                     >
                                         <option value="">Manual</option>
                                         <option value={0}>Bajo:     [0-15]</option>
@@ -717,26 +732,30 @@ const Main = () => {
                                     </select>
                                     <input
                                         type="text"
-                                        placeholder={``}
+                                        className="form-control text-center"
                                         value={aceleracion}
                                         onChange={validateNumberAceleracion}
-                                        style={{ marginLeft: '25px', marginRight: '25px', width: '200px', height: '22px', fontSize: '15px' }}
                                         disabled={!isAceleracionManual}
                                     />
-                                    <label style={{ marginLeft: '-20px', marginRight: '-30px', width: '75px', fontSize: '15px', color: 'blue' }}>{comboLabelsFinal[2]}</label>
                                 </div>
-                                <span style={{ color: 'red', fontSize: '12px',   whiteSpace: 'pre' }}>{aceleracionError}</span>
+                                <div className="col-1">
+                                    <span className="form-text">{comboLabelsFinal[2]}</span>
+                                </div>
+                                <div className="col-3">
+                                    <div className="text-danger small">{aceleracionError}</div>
+                                </div>
                             </div>
-
-
                             {/* Posición del Acelerador */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[3]}:</label>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-3 text-start">
+                                    <label className="form-label">{comboLabels[3]}:</label>
+                                </div>
+                                <div className="col-5 d-flex justify-content-center">
                                     <select
-                                        style={{ width: '200px', height: '22px', fontSize: '15px' }}
+                                        className="form-select text-center"
                                         onChange={handleComboboxChangePAceleracion}
                                         value={comboboxPAceleracion}
+                                        disabled={!isPAceleracionManual}
                                     >
                                         <option value="">Manual</option>
                                         <option value={0}>Bajo:     [0-15]</option>
@@ -746,25 +765,30 @@ const Main = () => {
                                     </select>
                                     <input
                                         type="text"
-                                        placeholder={``}
+                                        className="form-control text-center"
                                         value={paceleracion}
                                         onChange={validateNumberPAceleracion}
-                                        style={{ marginLeft: '25px', marginRight: '25px', width: '200px', height: '22px', fontSize: '15px' }}
                                         disabled={!isPAceleracionManual}
                                     />
-                                    <label style={{ marginLeft: '-20px', marginRight: '-30px', width: '75px', fontSize: '15px', color: 'blue' }}>{comboLabelsFinal[3]}</label>
                                 </div>
-                                <span style={{ color: 'red', fontSize: '12px',   whiteSpace: 'pre' }}>{paceleracionError}</span>
+                                <div className="col-1">
+                                    <span className="form-text">{comboLabelsFinal[3]}</span>
+                                </div>
+                                <div className="col-3">
+                                    <div className="text-danger small">{paceleracionError}</div>
+                                </div>
                             </div>
-
                             {/* Temperatura del Motor */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[4]}:</label>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-3 text-start">
+                                    <label className="form-label">{comboLabels[4]}:</label>
+                                </div>
+                                <div className="col-5 d-flex justify-content-center">
                                     <select
-                                        style={{ width: '200px', height: '22px', fontSize: '15px' }}
+                                        className="form-select text-center"
                                         onChange={handleComboboxChangeTMotor}
                                         value={comboboxTMotor}
+                                        disabled={!isTMotorManual}
                                     >
                                         <option value="">Manual</option>
                                         <option value={0}>Bajo:               [0-82]</option>
@@ -774,25 +798,30 @@ const Main = () => {
                                     </select>
                                     <input
                                         type="text"
-                                        placeholder={``}
+                                        className="form-control text-center"
                                         value={tmotor}
                                         onChange={validateNumberTmotor}
-                                        style={{ marginLeft: '25px', marginRight: '25px', width: '200px', height: '22px', fontSize: '15px' }}
                                         disabled={!isTMotorManual}
                                     />
-                                    <label style={{ marginLeft: '-20px', marginRight: '-30px', width: '75px', fontSize: '15px', color: 'blue' }}>{comboLabelsFinal[4]}</label>
                                 </div>
-                                <span style={{ color: 'red', fontSize: '12px',   whiteSpace: 'pre' }}>{tmotorError}</span>
+                                <div className="col-1">
+                                    <span className="form-text">{comboLabelsFinal[4]}</span>
+                                </div>
+                                <div className="col-3">
+                                    <div className="text-danger small">{tmotorError}</div>
+                                </div>
                             </div>
-
                             {/* Carga del Motor */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column' , transform: 'scale(1.05)'}}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[5]}:</label>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-3 text-start">
+                                    <label className="form-label">{comboLabels[5]}:</label>
+                                </div>
+                                <div className="col-5 d-flex justify-content-center">
                                     <select
-                                        style={{ width: '200px', height: '22px', fontSize: '15px' }}
+                                        className="form-select text-center"
                                         onChange={handleComboboxChangeCMotor}
                                         value={comboboxCMotor}
+                                        disabled={!isCMotorManual}
                                     >
                                         <option value="">Manual</option>
                                         <option value={0}>Bajo:     [0-10]</option>
@@ -802,34 +831,32 @@ const Main = () => {
                                     </select>
                                     <input
                                         type="text"
-                                        placeholder={``}
+                                        className="form-control text-center"
                                         value={cmotor}
                                         onChange={validateNumberCmotor}
-                                        style={{ marginLeft: '25px', marginRight: '25px', width: '200px', height: '22px', fontSize: '15px' }}
                                         disabled={!isCMotorManual}
                                     />
-                                    <label style={{ marginLeft: '-20px', marginRight: '-30px', width: '75px', fontSize: '15px', color: 'blue' }}>{comboLabelsFinal[3]}</label>
                                 </div>
-                                <span style={{ color: 'red', fontSize: '12px',   whiteSpace: 'pre' }}>{cmotorError}</span>
-                            </div>
-
-                            {/* Añadir separador */}
-                            <div style={{ marginBottom: '10px', marginTop: '5px' }}>
-                                <div style={{ marginBottom: '5px', marginTop: '5px', display: 'flex', alignItems: 'center' , transform: 'scale(1.05)'}}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>
-                                        {'–'.repeat(95)}
-                                    </label>
+                                <div className="col-1">
+                                    <span className="form-text">{comboLabelsFinal[3]}</span>
+                                </div>
+                                <div className="col-3">
+                                    <div className="text-danger small">{cmotorError}</div>
                                 </div>
                             </div>
-
+                            {/* Separador */}
+                            <hr className="my-3" />
                             {/* Ritmo Cardiaco */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column' , transform: 'scale(1.05)'}}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[9]}:</label>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-3 text-start">
+                                    <label className="form-label">{comboLabels[9]}:</label>
+                                </div>
+                                <div className="col-5 d-flex justify-content-center">
                                     <select
-                                        style={{ width: '200px', height: '22px', fontSize: '15px' }}
+                                        className="form-select text-center"
                                         onChange={handleComboboxChangeCardiaco}
                                         value={comboboxCardiaco}
+                                        disabled={!isCardiacoManual}
                                     >
                                         <option value="">Manual</option>
                                         <option value={0}>Bradicardia:        [0-59]</option>
@@ -840,35 +867,32 @@ const Main = () => {
                                     </select>
                                     <input
                                         type="text"
-                                        placeholder={``}
+                                        className="form-control text-center"
                                         value={cardiaco}
                                         onChange={validateNumberCardiaco}
-                                        style={{ marginLeft: '25px', marginRight: '25px', width: '200px', height: '22px', fontSize: '15px' }}
                                         disabled={!isCardiacoManual}
                                     />
-                                    <label style={{ marginLeft: '-20px', marginRight: '-30px', width: '75px', fontSize: '15px', color: 'blue' }}>{comboLabelsFinal[8]}</label>
                                 </div>
-                                <span style={{ color: 'red', fontSize: '12px',   whiteSpace: 'pre' }}>{cardiacoError}</span>
-                            </div>
-                            
-
-                            {/* Añadir separador */}
-                            <div style={{ marginBottom: '10px', marginTop: '5px' }}>
-                                <div style={{ marginBottom: '10px', marginTop: '10px', display: 'flex', alignItems: 'center', transform: 'scale(1.05)' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>
-                                        {'–'.repeat(95)}
-                                    </label>
+                                <div className="col-1">
+                                    <span className="form-text">{comboLabelsFinal[8]}</span>
+                                </div>
+                                <div className="col-3">
+                                    <div className="text-danger small">{cardiacoError}</div>
                                 </div>
                             </div>
-
+                            {/* Separador */}
+                            <hr className="my-3" />
                             {/* Clima */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[10]}:</label>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-3 text-start">
+                                    <label className="form-label">{comboLabels[10]}:</label>
+                                </div>
+                                <div className="col-5 d-flex justify-content-center">
                                     <select
-                                        style={{ width: '200px', height: '22px', fontSize: '15px' }}
+                                        className="form-select text-center"
                                         onChange={handleComboboxChangeClima}
                                         value={comboboxClima}
+                                        disabled={!isClimaManual}
                                     >
                                         <option value="">Manual</option>
                                         <option value={1}>Soleado:               [1]</option>
@@ -884,24 +908,28 @@ const Main = () => {
                                     </select>
                                     <input
                                         type="text"
-                                        placeholder={``}
+                                        className="form-control text-center"
                                         value={clima}
                                         onChange={validateNumberClima}
-                                        style={{ marginLeft: '25px', marginRight: '25px', width: '200px', height: '22px', fontSize: '15px' }}
                                         disabled={!isClimaManual}
                                     />
                                 </div>
-                                <span style={{ color: 'red', fontSize: '12px', whiteSpace: 'pre' }}>{climaError}</span>
+                                <div className="col-1"></div>
+                                <div className="col-3">
+                                    <div className="text-danger small">{climaError}</div>
+                                </div>
                             </div>
-
                             {/* Visibilidad */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[11]}:</label>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-3 text-start">
+                                    <label className="form-label">{comboLabels[11]}:</label>
+                                </div>
+                                <div className="col-5 d-flex justify-content-center">
                                     <select
-                                        style={{ width: '200px', height: '22px', fontSize: '15px' }}
+                                        className="form-select text-center"
                                         onChange={handleComboboxChangeVisibilidad}
                                         value={comboboxVisibilidad}
+                                        disabled={!isVisibilidadManual}
                                     >
                                         <option value="">Manual</option>
                                         <option value={0}>Mala:      [0-0]</option>
@@ -912,25 +940,30 @@ const Main = () => {
                                     </select>
                                     <input
                                         type="text"
-                                        placeholder={``}
+                                        className="form-control text-center"
                                         value={visibilidad}
                                         onChange={validateNumberVisibilidad}
-                                        style={{ marginLeft: '25px', marginRight: '25px', width: '200px', height: '22px', fontSize: '15px' }}
                                         disabled={!isVisibilidadManual}
                                     />
-                                    <label style={{ marginLeft: '-20px', marginRight: '-30px', width: '75px', fontSize: '15px', color: 'blue' }}>{comboLabelsFinal[7]}</label>
                                 </div>
-                                <span style={{ color: 'red', fontSize: '12px', whiteSpace: 'pre' }}>{visibilidadError}</span>
+                                <div className="col-1">
+                                    <span className="form-text">{comboLabelsFinal[7]}</span>
+                                </div>
+                                <div className="col-3">
+                                    <div className="text-danger small">{visibilidadError}</div>
+                                </div>
                             </div>
-
                             {/* Precipitación */}
-                            <div align='left' style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', flexDirection: 'column', transform: 'scale(1.05)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>{comboLabels[12]}:</label>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-3 text-start">
+                                    <label className="form-label">{comboLabels[12]}:</label>
+                                </div>
+                                <div className="col-5 d-flex justify-content-center">
                                     <select
-                                        style={{ width: '200px', height: '22px', fontSize: '15px' }}
+                                        className="form-select text-center"
                                         onChange={handleComboboxChangePrecipitacion}
                                         value={comboboxPrecipitacion}
+                                        disabled={!isPrecipitacionManual}
                                     >
                                         <option value="">Manual</option>
                                         <option value={0}>Ninguna:  [0.0-0.0]</option>
@@ -941,132 +974,56 @@ const Main = () => {
                                     </select>
                                     <input
                                         type="text"
-                                        placeholder={``}
+                                        className="form-control text-center"
                                         value={precipitacion}
                                         onChange={validateNumberPrecipitacion}
-                                        style={{ marginLeft: '25px', marginRight: '25px', width: '200px', height: '22px', fontSize: '15px' }}
                                         disabled={!isPrecipitacionManual}
                                     />
-                                    <label style={{ marginLeft: '-20px', marginRight: '-300px', width: '75px', fontSize: '15px', color: 'blue' }}>{comboLabelsFinal[9]}</label>
                                 </div>
-                                <span style={{ color: 'red', fontSize: '12px', whiteSpace: 'pre' }}>{precipitacionError}</span>
-                            </div>
-
-                            {/* Añadir separador */}
-                            <div style={{ marginBottom: '10px', marginTop: '5px' }}>
-                                <div style={{ marginBottom: '10px', marginTop: '5px', display: 'flex', alignItems: 'center', transform: 'scale(1.05)' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>
-                                        {'–'.repeat(200)}
-                                    </label>
+                                <div className="col-1">
+                                    <span className="form-text">{comboLabelsFinal[9]}</span>
+                                </div>
+                                <div className="col-3">
+                                    <div className="text-danger small">{precipitacionError}</div>
                                 </div>
                             </div>
-
-                            {/* reCAPTCHA */}
-                            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px', marginTop: '20px' }}>
-                                <ReCAPTCHA
-                                    ref={recaptchaRef}
-                                    sitekey="6LfwVXYqAAAAAKB9S1HkKwMmBp1cisyFWveXg_s9"
-                                    onChange={handleCaptchaChange}
-                                />
-                                {/* Información Campos */}
-                                {mostrarEtiqueta && (
-                                    <label
-                                        style={{ marginLeft: '-190px', marginBottom: '-150px', color: 'red', fontSize: '15px' }}
-                                    >
-                                        Ingresar valores para todos los campos y realiza el reCAPTCHA par realizar la consulta
-                                    </label>
-                                )}
-                            </div>
-
-                            {/* Añadir separador */}
-                            <div style={{ marginBottom: '60px', marginTop: '60px' }}>
-                                <div style={{ marginBottom: '-50px', marginTop: '5px', display: 'flex', alignItems: 'center', transform: 'scale(1.05)' }}>
-                                    <label style={{ marginRight: '10px', width: '130px', fontSize: '15px' }}>
-                                        {'–'.repeat(200)}
-                                    </label>
-                                </div>
-                            </div>
+                            {/* Separador */}
+                            <hr className="my-3" />
                         </div>
-
-                        {/* Mapa */}
-                        <div style={{ flex: 1, marginLeft: '170px', marginTop: '90px', maxWidth: '1000px', transform: 'scale(1.25)'}}>
-                            <div id="map" style={{ width: '490px', height: '565px', border: '2px solid gray', padding: '10px' }}></div>
-                        </div>
-
-                        {/* Sección de Resultados */}
-                        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                            {/* Botón Borrar */}
-                            <button
-                                style={{
-                                    backgroundColor: '#3a75fc ',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '10px',
-                                    padding: '10px 26px',
-                                    fontSize: '16px',
-                                    position: 'absolute',
-                                    bottom: '10px',
-                                    left: '1050px',
-                                    marginBottom: '30px'
-                                }}
-                                onClick={handleDeleteClick}
-                            >
-                                Borrar
-                            </button>
-
-                            {/* Botón Calcular */}
-                            <button
-                                style={{
-                                    backgroundColor: '#3a75fc ',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '10px',
-                                    padding: '10px 20px',
-                                    fontSize: '16px',
-                                    position: 'absolute',
-                                    bottom: '10px',
-                                    left: '-150px',
-                                    marginBottom: '30px'
-                                }}
-                                //disabled={!captchaValido}
-                                onClick={handleCalculateClick}
-                            >
-                                Calcular
-                            </button>
-
-                            {/* Etiqueta Nivel Riesgo */}
-                            <div
-                                style={{
-                                    margin: '10px 0',
-                                    fontSize: '25px',
-                                    position: 'absolute',
-                                    bottom: '300px',
-                                    left: '45%',
-                                    marginBottom: '-165px',
-                                    fontWeight: 'bold'
-                                }}>
-                                Nivel de riesgo:
+                    </form>
+                    {/* reCAPTCHA */}
+                    <div className="my-4">
+                        <ReCAPTCHA
+                            ref={recaptchaRef}
+                            sitekey="6LfwVXYqAAAAAKB9S1HkKwMmBp1cisyFWveXg_s9"
+                            onChange={handleCaptchaChange}
+                        />
+                        {mostrarEtiqueta && (
+                            <div className="text-danger mt-2">
+                                Ingresar valores para todos los campos y realiza el reCAPTCHA para realizar la consulta
                             </div>
-
-                            {/* Etiqueta Resultado */}
-                            <div
-                                style={{
-                                    backgroundColor: color,
-                                    color: 'black',
-                                    padding: '10px 10px',
-                                    fontSize: '25px',
-                                    position: 'absolute',
-                                    bottom: '260px',
-                                    left: '61%',
-                                    marginBottom: '-135px',
-                                    fontWeight: 'bold'
-                                }}>
-                                {cargando ? 'Calculando...' : resultado}
-                            </div>
+                        )}
+                    </div>
+                    {/* Botones */}
+                    <div className="d-flex gap-2">
+                        <button className="btn btn-primary" type="button" onClick={handleCalculateClick}>Calcular</button>
+                        <button className="btn btn-secondary" type="button" onClick={handleDeleteClick}>Borrar</button>
+                    </div>
+                </div>
+                {/* Mapa y resultados */}
+                <div className="col-lg-6 col-md-12 d-flex flex-column" >
+                    <div className="mb-4 flex-grow-1 d-flex">
+                        <div id="map" className="w-100 h-50 border border-2 border-secondary rounded" style={{ flex: 1 }}></div>
+                    </div>
+                    <div className="text-center">
+                        <div className="h5 fw-bold my-3">Nivel de riesgo:</div>
+                        <div
+                            className={`p-3 rounded fw-bold fs-4 ${color === 'green' ? 'bg-success' : color === 'yellow' ? 'bg-warning' : color === 'orange' ? 'bg-orange' : color === 'red' ? 'bg-danger' : ''}`}
+                        >
+                            {cargando ? 'Calculando...' : resultado}
                         </div>
                     </div>
-                
-                }
+                </div>
             </div>
         </div>
     );

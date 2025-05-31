@@ -31,11 +31,6 @@ function App() {
         <Router>
           <Header />
           <Routes>
-            {/*
-            <Route path="/" element={<Home />}></Route>
-            <Route path="/about" element={<About />}></Route>
-            <Route path="/main" element={<Main />}></Route>
-            */}
             <Route path="/" element={<Main />}></Route>
           </Routes>
           <Footer />
