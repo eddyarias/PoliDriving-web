@@ -990,7 +990,7 @@ const Main = () => {
 
                         {/* Mapa */}
                         <div style={{ flex: 1, marginLeft: '170px', marginTop: '90px', maxWidth: '1000px', transform: 'scale(1.25)'}}>
-                            <div id="map" style={{ width: '550px', height: '420px', border: '2px solid gray', padding: '10px' }}></div>
+                            <div id="map" style={{ width: '490px', height: '565px', border: '2px solid gray', padding: '10px' }}></div>
                         </div>
 
                         {/* Sección de Resultados */}
