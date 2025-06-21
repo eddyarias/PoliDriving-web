@@ -28,7 +28,7 @@ const Main = () => {
     const [comboboxVelocidad, setComboboxVelocidad] = useState('');
     const [comboboxCardiaco, setComboboxCardiaco] = useState('');
     const [mostrarEtiqueta, setMostrarEtiqueta] = useState(true);
-    const [resultado, setResultado] = useState('Calculando...');
+    const [resultado, setResultado] = useState('.......');
     const [comboboxTMotor, setComboboxTMotor] = useState('');
     const [comboboxCMotor, setComboboxCMotor] = useState('');
     const [comboboxClima, setComboboxClima] = useState('');
@@ -443,6 +443,7 @@ const Main = () => {
                     parseFloat(onsite)
                 ]]
             });
+            setResultado('Calculando...');
     
             const config = {
                 method: 'post',
@@ -470,7 +471,7 @@ const Main = () => {
                     alert('No se pudo establecer conexión o ocurrió un error: ' + error.message);
                 })
                 .finally(() => {
-                    resetFields();
+                    //resetFields();
                     setIsPrecipitacionManual(true);
                 });
         } else {
@@ -480,7 +481,7 @@ const Main = () => {
     
     const handleDeleteClick = () => {
         setColor(obtenerColorFondo(0));
-        setResultado('Calculando...');
+        setResultado('........');
         resetFields();
     };
 
@@ -1020,7 +1021,7 @@ const Main = () => {
                         <div
                             className={`p-3 rounded fw-bold fs-4 ${color === 'green' ? 'bg-success' : color === 'yellow' ? 'bg-warning' : color === 'orange' ? 'bg-orange' : color === 'red' ? 'bg-danger' : ''}`}
                         >
-                            {cargando ? 'Calculando...' : resultado}
+                            {cargando ? '........' : resultado}
                         </div>
                     </div>
                 </div>
